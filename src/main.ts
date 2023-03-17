@@ -8,6 +8,7 @@ async function initialize() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('MediaLand')
     .setDescription('Lister et partager vos médias préférés')
     .setVersion('1.0')
