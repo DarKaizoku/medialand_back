@@ -29,16 +29,16 @@ export class Media extends BaseEntity {
   duree: Date;
 
   @ApiProperty()
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   description: string;
 
   @ApiProperty()
-  @Column({ type: 'date', nullable: true })
-  annee: Date;
+  @Column({ type: 'integer', nullable: true })
+  annee: number;
 
   @ApiProperty()
-  @Column({ type: 'boolean' })
-  format: boolean;
+  @Column({ type: 'integer', default: 0 })
+  format: number;
 
   @ApiProperty()
   @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.id)

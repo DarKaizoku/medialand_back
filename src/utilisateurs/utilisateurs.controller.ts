@@ -166,7 +166,7 @@ export class UtilisateursController {
     if (!data) {
       return {
         status: EStatus.FAIL,
-        message: EMessageStatus.NoData,
+        message: EMessageStatus.Unknown,
       };
     }
 

@@ -1,13 +1,12 @@
-import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
   IsDate,
-  IsBoolean,
   IsOptional,
   MinLength,
   Length,
+  IsNumber,
 } from 'class-validator';
 
 export class CreateMediaDto {
@@ -20,23 +19,23 @@ export class CreateMediaDto {
   titre: string;
 
   @ApiProperty()
-  @Optional()
+  @IsOptional()
   @IsDate()
   duree: Date;
 
   @ApiProperty()
-  @Optional()
+  @IsOptional()
   @Length(2, 255)
   @IsString()
   description: string;
 
   @ApiProperty()
   @IsOptional()
-  @IsDate()
-  annee: Date;
+  @IsNumber()
+  annee: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsBoolean()
-  format: boolean;
+  @IsNumber()
+  format: number;
 }

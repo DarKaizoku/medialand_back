@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AutoCreate } from 'src/middleware/autoCreateFct';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 import { Utilisateur } from './entities/utilisateur.entity';
@@ -9,14 +10,17 @@ export class UtilisateursService {
     createUtilisateurDto: CreateUtilisateurDto,
     passwordH: string,
   ): Promise<Utilisateur | undefined> {
-    const newUser = new Utilisateur();
+    let newUser = new Utilisateur();
 
-    newUser.nom = createUtilisateurDto.nom;
+    /* newUser.nom = createUtilisateurDto.nom;
     newUser.prenom = createUtilisateurDto.prenom;
     newUser.username = createUtilisateurDto.username;
     newUser.password = passwordH;
     newUser.email = createUtilisateurDto.email;
-    newUser.admin = createUtilisateurDto.admin;
+    newUser.admin = createUtilisateurDto.admin; */
+
+    newUser = AutoCreate(createUtilisateurDto) as Utilisateur;
+    console.log(newUser);
 
     await Utilisateur.save(newUser);
 
@@ -32,6 +36,22 @@ export class UtilisateursService {
 
   async findAll(): Promise<Utilisateur[] | undefined> {
     const data = await Utilisateur.find();
+
+    const list = Object.entries(data[0]);
+    const list2 = Object.fromEntries(list);
+    const listKeys = Object.keys(data[0]);
+    const listValue = Object.values(data[0]);
+
+    const newdata = Object.create(data[0]);
+    newdata[listKeys[1]] = '44';
+
+    console.log('entries', list);
+    console.log('fromentries', list2);
+    console.log('keys', listKeys);
+    console.log('values', listValue);
+    console.log('type', Object.keys(newdata));
+
+    Object.create;
 
     if (data[0]) {
       return data;

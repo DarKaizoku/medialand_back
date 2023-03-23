@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { AutoCreate } from 'src/middleware/autoCreateFct';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
+import { Media } from './entities/media.entity';
 
 @Injectable()
 export class MediasService {
-  create(createMediaDto: CreateMediaDto) {
-    return 'This action adds a new media';
+  async create(createMediaDto: CreateMediaDto) {
+    let newMedia = new Media();
+
+    newMedia = AutoCreate(createMediaDto) as Media;
+
+    const dataSaved = await Media.save(newMedia);
+    console.log(dataSaved);
+
+    //const dataSaved = await Media.findOneBy(newMedia)
+
+    return 'tadaaaa';
   }
 
   findAll() {

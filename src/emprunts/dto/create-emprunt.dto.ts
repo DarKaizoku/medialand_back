@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsNotEmpty, IsDate, IsNumber, IsOptional } from 'class-validator';
 export class CreateEmpruntDto {
   @ApiProperty()
@@ -14,11 +15,13 @@ export class CreateEmpruntDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsDate()
+  @Type(() => Date)
   date_emprunt: Date;
 
   @ApiProperty()
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   date_rendu: Date;
 
   @ApiProperty()

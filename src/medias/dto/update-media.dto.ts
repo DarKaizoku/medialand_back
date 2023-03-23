@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateMediaDto } from './create-media.dto';
-import { IsString, IsDate, IsBoolean, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class UpdateMediaDto extends PartialType(CreateMediaDto) {
   @ApiProperty()
@@ -10,5 +10,5 @@ export class UpdateMediaDto extends PartialType(CreateMediaDto) {
 
   @ApiProperty()
   @IsOptional()
-  format: boolean;
+  format: number;
 }
