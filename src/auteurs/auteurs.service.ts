@@ -5,35 +5,59 @@ import { Auteur } from './entities/auteur.entity';
 
 @Injectable()
 export class AuteursService {
-  async create(createAuteurDto: CreateAuteurDto) {
-    const newData = new Auteur();
-    newData.nom = createAuteurDto.nom;
-    await Auteur.save(newData);
-    const data = await Auteur.findOneBy({ nom: newData.nom });
+	async create(
+		createAuteurDto: CreateAuteurDto
+	): Promise<Auteur | undefined> {
+		const newData = new Auteur();
 
-    if (!data) {
-      return undefined;
-    }
-    return data;
-  }
+		newData.nom = createAuteurDto.nom;
 
-  async findAll() {
-    const data = await Auteur.find();
-    if (data[0]) {
-      return data;
-    }
-    return undefined;
-  }
+		await Auteur.save(newData);
 
-  async findOne(id: number) {
-    return `This action returns a #${id} auteur`;
-  }
+		const data = await Auteur.findOneBy({ nom: newData.nom });
 
-  async update(id: number, updateAuteurDto: UpdateAuteurDto) {
-    return `This action updates a #${id} auteur`;
-  }
+		if (!data) {
+			return undefined;
+		}
+		return data;
+	}
 
-  async remove(id: number) {
-    return `This action removes a #${id} auteur`;
-  }
+	async findAll(): Promise<Auteur[] | undefined> {
+		const data = await Auteur.find();
+
+		if (data[0]) {
+			return data;
+		}
+		return undefined;
+	}
+
+	async findOne(id: number): Promise<Auteur | undefined> {
+		const data = await Auteur.findOneBy({ id });
+
+		if (data) {
+			return data;
+		}
+		return undefined;
+	}
+
+	async update(
+		id: number,
+		updateAuteurDto: UpdateAuteurDto
+	): Promise<Auteur | undefined> {
+		await Auteur.update(id, updateAuteurDto);
+
+		const dataUpdated = await Auteur.findOneBy({ id });
+		if (dataUpdated) {
+			return dataUpdated;
+		}
+		return undefined;
+	}
+
+	async remove(data: Auteur): Promise<Auteur | undefined> {
+		const dataDeleted = await Auteur.remove(data);
+		if (dataDeleted) {
+			return dataDeleted;
+		}
+		return undefined;
+	}
 }

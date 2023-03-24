@@ -1,26 +1,66 @@
 import { Injectable } from '@nestjs/common';
+import { AutoCreate } from 'src/middleware/autoCreateFct';
 import { CreateCategorieDto } from './dto/create-category.dto';
 import { UpdateCategorieDto } from './dto/update-category.dto';
+import { Categorie } from './entities/category.entity';
 
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategorieDto) {
-    return 'This action adds a new category';
-  }
+	async create(
+		createCategoryDto: CreateCategorieDto
+	): Promise<Categorie | undefined> {
+		let newCategorie = new Categorie();
 
-  findAll() {
-    return `This action returns all categories`;
-  }
+		newCategorie = AutoCreate(createCategoryDto) as Categorie;
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
+		await Categorie.save(newCategorie);
 
-  update(id: number, updateCategoryDto: UpdateCategorieDto) {
-    return `This action updates a #${id} category`;
-  }
+		const data = await Categorie.findOneBy({
+			nom: createCategoryDto.nom,
+		});
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
-  }
+		if (data) {
+			return data;
+		}
+		return undefined;
+	}
+
+	async findAll(): Promise<Categorie[] | undefined> {
+		const data = await Categorie.find();
+
+		if (data[0]) {
+			return data;
+		}
+		return undefined;
+	}
+
+	async findOne(id: number): Promise<Categorie | undefined> {
+		const data = await Categorie.findOneBy({ id });
+
+		if (data) {
+			return data;
+		}
+		return undefined;
+	}
+
+	async update(
+		id: number,
+		updateCategoryDto: UpdateCategorieDto
+	): Promise<Categorie | undefined> {
+		await Categorie.update(id, updateCategoryDto);
+
+		const dataUpdated = await Categorie.findOneBy({ id });
+		if (dataUpdated) {
+			return dataUpdated;
+		}
+		return undefined;
+	}
+
+	async remove(data: Categorie): Promise<Categorie | undefined> {
+		const datadeleted = await Categorie.remove(data);
+		if (datadeleted) {
+			return datadeleted;
+		}
+		return undefined;
+	}
 }

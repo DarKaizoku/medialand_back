@@ -4,59 +4,75 @@ import { Categorie } from 'src/categories/entities/category.entity';
 import { Support } from 'src/supports/entities/support.entity';
 import { Utilisateur } from 'src/utilisateurs/entities/utilisateur.entity';
 import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
+	BaseEntity,
+	Column,
+	Entity,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
 export class Media extends BaseEntity {
-  @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
+	@ApiProperty()
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @ApiProperty()
-  @Column({ type: 'varchar' })
-  titre: string;
+	@ApiProperty()
+	@Column({ type: 'varchar' })
+	titre: string;
 
-  @ApiProperty()
-  @Column({ type: 'time', nullable: true })
-  duree: Date;
+	@ApiProperty()
+	@Column({ type: 'integer', nullable: true })
+	duree: number;
 
-  @ApiProperty()
-  @Column({ type: 'varchar', nullable: true })
-  description: string;
+	@ApiProperty()
+	@Column({ type: 'varchar', nullable: true })
+	description: string;
 
-  @ApiProperty()
-  @Column({ type: 'integer', nullable: true })
-  annee: number;
+	@ApiProperty()
+	@Column({ type: 'integer', nullable: true })
+	annee: number;
 
-  @ApiProperty()
-  @Column({ type: 'integer', default: 0 })
-  format: number;
+	@ApiProperty()
+	@Column({ type: 'integer', default: 0 })
+	format: number;
 
-  @ApiProperty()
-  @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.id)
-  @JoinColumn()
-  proprietaire: number[];
+	@ApiProperty()
+	@ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.id, {
+		eager: true,
+		onUpdate: 'CASCADE',
+		onDelete: 'CASCADE',
+	})
+	@JoinColumn()
+	proprietaire: number[];
 
-  @ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.mediatheque)
-  utilisateur: Utilisateur[];
+	@ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.mediatheque)
+	utilisateur: Utilisateur[];
 
-  @ManyToMany(() => Support, (support) => support.nom)
-  @JoinTable()
-  support: string[];
+	@ManyToMany(() => Support, (support) => support.id, {
+		eager: true,
+		onUpdate: 'CASCADE',
+		onDelete: 'CASCADE',
+	})
+	@JoinTable()
+	support: Support[];
 
-  @ManyToMany(() => Categorie, (categorie) => categorie.nom)
-  @JoinTable()
-  categorie: string[];
+	@ManyToMany(() => Categorie, (categorie) => categorie.id, {
+		eager: true,
+		onUpdate: 'CASCADE',
+		onDelete: 'CASCADE',
+	})
+	@JoinTable()
+	categorie: Categorie[];
 
-  @ManyToMany(() => Auteur, (auteur) => auteur.nom)
-  @JoinTable()
-  auteur: string[];
+	@ManyToMany(() => Auteur, {
+		eager: true,
+		onUpdate: 'CASCADE',
+		onDelete: 'CASCADE',
+	})
+	@JoinTable()
+	auteur: Auteur[];
 }

@@ -1,12 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
+	Controller,
+	Get,
+	Post,
+	Body,
+	Patch,
+	Param,
+	Delete,
+	UseGuards,
+	ParseIntPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -21,54 +22,107 @@ import { Auteur } from './entities/auteur.entity';
 @ApiBearerAuth()
 @Controller('auteurs')
 export class AuteursController {
-  constructor(private readonly auteursService: AuteursService) {}
+	constructor(private readonly auteursService: AuteursService) {}
 
-  @Post()
-  async create(@Body() createAuteurDto: CreateAuteurDto) {
-    const dataCheck = await Auteur.findOneBy({ nom: createAuteurDto.nom });
-    if (dataCheck) {
-      return {
-        status: EStatus.FAIL,
-        message: EMessageStatus.x2,
-        data: createAuteurDto.nom,
-      };
-    }
-    const newData = await this.auteursService.create(createAuteurDto);
-    return {
-      status: EStatus.OK,
-      message: EMessageStatus.createdOK,
-      data: newData,
-    };
-  }
+	@Post()
+	async create(@Body() createAuteurDto: CreateAuteurDto) {
+		//Teste si l'auteur est déjà présent dans la BD, quelque soit son écriture
+		const dataAll = await (
+			await Auteur.find()
+		).map((data) => data.nom);
+		const test = dataAll
+			.toString()
+			.toLowerCase()
+			.includes(createAuteurDto.nom.toLowerCase());
 
-  @Get()
-  async findAll() {
-    const data = await this.auteursService.findAll();
-    if (!data) {
-      return {
-        status: EStatus.FAIL,
-        message: EMessageStatus.NoData,
-      };
-    }
-    return {
-      status: EStatus.OK,
-      message: EMessageStatus.dataOK,
-      data: data,
-    };
-  }
+		if (test) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.x2,
+				data: createAuteurDto.nom,
+			};
+		}
+		const newData = await this.auteursService.create(
+			createAuteurDto
+		);
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.createdOK,
+			data: newData,
+		};
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.auteursService.findOne(+id);
-  }
+	@Get()
+	async findAll() {
+		const data = await this.auteursService.findAll();
+		if (!data) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.NoData,
+			};
+		}
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.dataOK,
+			data: data,
+		};
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuteurDto: UpdateAuteurDto) {
-    return this.auteursService.update(+id, updateAuteurDto);
-  }
+	@Get(':id')
+	async findOneId(@Param('id', ParseIntPipe) id: number) {
+		const data = await this.auteursService.findOne(id);
+		if (!data) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unknown,
+			};
+		}
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.dataOK,
+			data: data,
+		};
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.auteursService.remove(+id);
-  }
+	@Patch(':id')
+	async update(
+		@Param('id', ParseIntPipe) id: number,
+		@Body() updateAuteurDto: UpdateAuteurDto
+	) {
+		const dataCheck = await Auteur.findOneBy({ id });
+		if (!dataCheck) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unknown,
+			};
+		}
+		const data = await this.auteursService.update(
+			id,
+			updateAuteurDto
+		);
+
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.updateOK,
+			data: data,
+		};
+	}
+
+	@Delete(':id')
+	async remove(@Param('id', ParseIntPipe) id: number) {
+		const data = await Auteur.findOneBy({ id });
+		if (!data) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unknown,
+			};
+		}
+		await this.auteursService.remove(data);
+
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.DeletedOK,
+			save: data,
+		};
+	}
 }

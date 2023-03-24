@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { time } from 'console';
+import { TDuree } from 'src/constants/duree.type';
 import { AutoCreate } from 'src/middleware/autoCreateFct';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
@@ -6,32 +8,72 @@ import { Media } from './entities/media.entity';
 
 @Injectable()
 export class MediasService {
-  async create(createMediaDto: CreateMediaDto) {
-    let newMedia = new Media();
+	async create(
+		createMediaDto: CreateMediaDto
+	): Promise<Media | undefined> {
+		let newMedia = new Media();
 
-    newMedia = AutoCreate(createMediaDto) as Media;
+		//permet de transformer l'objet "Durée" en Number
+		if (typeof createMediaDto.duree === 'object') {
+			createMediaDto.duree =
+				(createMediaDto.duree as TDuree).heures * 3600 +
+				(createMediaDto.duree as TDuree).minutes * 60 +
+				(createMediaDto.duree as TDuree).secondes;
+		}
 
-    const dataSaved = await Media.save(newMedia);
-    console.log(dataSaved);
+		newMedia = AutoCreate(createMediaDto) as Media;
 
-    //const dataSaved = await Media.findOneBy(newMedia)
+		const dataSaved = await Media.save(newMedia);
 
-    return 'tadaaaa';
-  }
+		const newdata = await Media.findOneBy({
+			titre: createMediaDto.titre,
+		});
 
-  findAll() {
-    return `This action returns all medias`;
-  }
+		if (newdata) {
+			return newdata;
+		}
+		return undefined;
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} media`;
-  }
+	async findAll(): Promise<Media[] | undefined> {
+		const data = await Media.find();
 
-  update(id: number, updateMediaDto: UpdateMediaDto) {
-    return `This action updates a #${id} media`;
-  }
+		if (data[0]) {
+			return data;
+		}
+		return undefined;
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} media`;
-  }
+	async findOne(id: number): Promise<Media | undefined> {
+		const data = await Media.findOneBy({ id });
+
+		if (data) {
+			return data;
+		}
+		return undefined;
+	}
+
+	async update(
+		id: number,
+		updateMediaDto: UpdateMediaDto
+	): Promise<Media | undefined> {
+		if (typeof updateMediaDto.duree === 'object') {
+			updateMediaDto.duree =
+				(updateMediaDto.duree as TDuree).heures * 3600 +
+				(updateMediaDto.duree as TDuree).minutes * 60 +
+				(updateMediaDto.duree as TDuree).secondes;
+		}
+
+		await Media.update(id, updateMediaDto as unknown as Media);
+
+		const dataUpdated = await Media.findOneBy({ id });
+		if (dataUpdated) {
+			return dataUpdated;
+		}
+		return undefined;
+	}
+
+	async remove(id: number): Promise<Media | undefined> {
+		return undefined;
+	}
 }
