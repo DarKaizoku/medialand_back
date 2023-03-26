@@ -79,9 +79,10 @@ export class UtilisateursService {
 		return dataUpdated;
 	}
 
-	async remove(dataUser: Utilisateur): Promise<Utilisateur | undefined> {
-		const data = await Utilisateur.remove(dataUser);
+	async remove(id: number): Promise<Utilisateur | undefined> {
+		const data = await Utilisateur.findOneBy({ id });
 		if (data) {
+			await Utilisateur.remove(data);
 			return data;
 		}
 		return undefined;

@@ -49,7 +49,8 @@ export class CreateMediaDto {
 
 	@ApiProperty()
 	@IsNotEmpty()
-	support: Support;
+	@IsNumber()
+	support: number;
 
 	@ApiProperty()
 	@IsOptional()

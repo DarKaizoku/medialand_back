@@ -177,15 +177,13 @@ export class UtilisateursController {
 	async remove(@Request() req: any) {
 		const id = req.user.user_id;
 
-		const data = await Utilisateur.findOneBy({ id });
+		const data = await Utilisateur.remove(id);
 		if (!data) {
 			return {
 				status: EStatus.FAIL,
 				message: EMessageStatus.Unknown,
 			};
 		}
-
-		await Utilisateur.remove(data);
 
 		return {
 			status: EStatus.OK,

@@ -20,6 +20,7 @@ import { EMessageStatus, EStatus } from 'src/constants/enum';
 import { Auteur } from 'src/auteurs/entities/auteur.entity';
 import { In } from 'typeorm';
 import { Categorie } from 'src/categories/entities/category.entity';
+import { Support } from 'src/supports/entities/support.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Medias')
@@ -47,7 +48,8 @@ export class MediasController {
 		if (checkTitre) {
 			const checkSupport = allData.filter(
 				(data) =>
-					data.support === createMediaDto.support
+					data.support.id ===
+					createMediaDto.support
 			);
 			if (checkSupport) {
 				return {
@@ -63,7 +65,6 @@ export class MediasController {
 				where: { id: In(createMediaDto.auteur) },
 			});
 		}
-		console.log(listAuteurs);
 
 		// extraction des données Categories via leurs Ids
 		if (createMediaDto.categorie) {
@@ -71,7 +72,6 @@ export class MediasController {
 				where: { id: In(createMediaDto.categorie) },
 			});
 		}
-		console.log(listCategories);
 
 		const newData = await this.mediasService.create(
 			createMediaDto,
@@ -122,13 +122,67 @@ export class MediasController {
 		@Param('id', ParseIntPipe) id: number,
 		@Body() updateMediaDto: UpdateMediaDto
 	) {
-		const dataCheck = await Media.findOneBy({ id });
+		//Multi reqeuet ou une requete puis tri en JS ??? !!!! ici multi requete
+		const dataAll = await Media.find();
+		const dataCheck = dataAll.map((data) => data.id).includes(id);
 		if (!dataCheck) {
 			return {
 				status: EStatus.FAIL,
 				message: EMessageStatus.Unknown,
 			};
 		}
+		if (updateMediaDto.titre) {
+			const listTitre = dataAll.map((data) => data.titre);
+
+			const checkTitre = listTitre
+				.toString()
+				.toLowerCase()
+				.includes(updateMediaDto.titre.toLowerCase());
+
+			//Vérification du No de Support et nom de Media sur même Support : Non Accepté
+			if (updateMediaDto.support) {
+				const supportExist = await Support.findOneBy({
+					id: updateMediaDto.support,
+				});
+				if (!supportExist) {
+					return {
+						status: EStatus.FAIL,
+						message: EMessageStatus.Unknown,
+						data:
+							'Vérifiez le Support : ' +
+							updateMediaDto.support,
+					};
+				}
+				const checkSupport = dataAll.filter(
+					(data) =>
+						data.support.id ===
+						updateMediaDto.support
+				);
+				if (checkSupport) {
+					return {
+						status: EStatus.FAIL,
+						message: `Ce Média (${updateMediaDto.titre}) sur ce Support (${updateMediaDto.support}) existe déjà !!`,
+					};
+				}
+			}
+		}
+
+		//Verification du no de Support proposé
+		if (updateMediaDto.support) {
+			const checkSupport = await Support.findOneBy({
+				id: updateMediaDto.support,
+			});
+			if (!checkSupport) {
+				return {
+					status: EStatus.FAIL,
+					message: EMessageStatus.Unknown,
+					data:
+						'Vérifiez le Support : ' +
+						updateMediaDto.support,
+				};
+			}
+		}
+
 		const data = await this.mediasService.update(
 			id,
 			updateMediaDto
@@ -143,6 +197,18 @@ export class MediasController {
 
 	@Delete(':id')
 	async remove(@Param('id', ParseIntPipe) id: number) {
-		return this.mediasService.remove(+id);
+		const dataDeleted = await this.mediasService.remove(id);
+
+		if (!dataDeleted) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unknown,
+			};
+		}
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.DeletedOK,
+			save: dataDeleted,
+		};
 	}
 }

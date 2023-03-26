@@ -42,8 +42,8 @@ export class Media extends BaseEntity {
 
 	@ApiProperty()
 	@ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.id, {
-		onUpdate: 'CASCADE',
-		onDelete: 'CASCADE',
+		eager: true,
+		cascade: true,
 	})
 	@JoinColumn()
 	proprietaire: number[];

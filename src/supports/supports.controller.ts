@@ -109,6 +109,7 @@ export class SupportsController {
 
 	@Delete(':id')
 	async remove(@Param('id', ParseIntPipe) id: number) {
+		//Ici controle de l'existence de la DATA dans le controller, utilisateur et media controle dans le service
 		const data = await Support.findOneBy({ id });
 		if (!data) {
 			return {
