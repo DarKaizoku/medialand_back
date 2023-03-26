@@ -49,13 +49,13 @@ export class CreateMediaDto {
 
 	@ApiProperty()
 	@IsNotEmpty()
-	support: Support[];
+	support: Support;
 
 	@ApiProperty()
 	@IsOptional()
-	categorie: Categorie[];
+	categorie: number[];
 
 	@ApiProperty()
 	@IsOptional()
-	auteur: Auteur[];
+	auteur: number[];
 }

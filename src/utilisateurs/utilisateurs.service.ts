@@ -36,17 +36,17 @@ export class UtilisateursService {
 	async findAll(): Promise<Utilisateur[] | undefined> {
 		const data = await Utilisateur.find();
 
-		/*lignes de test opur contruction autocreate
-     const list = Object.entries(data[0]);
-    const list2 = Object.fromEntries(list);
-    const listKeys = Object.keys(data[0]);
-    const listValue = Object.values(data[0]);
-    const test = listValue.indexOf
+		//lignes de test opur contruction autocreate
+		const list = Object.entries(data[0]);
+		const list2 = Object.fromEntries(list);
+		const listKeys = Object.keys(data[0]);
+		const listValue = Object.values(data[0]);
+		const test = listValue.indexOf;
 
-    console.log('entries', list);
-    console.log('fromentries', list2);
-    console.log('keys', listKeys);
-    console.log('values', listValue); */
+		console.log('entries', list);
+		console.log('fromentries', list2);
+		console.log('keys', listKeys);
+		console.log('values', listValue);
 
 		if (data[0]) {
 			return data;

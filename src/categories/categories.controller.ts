@@ -18,8 +18,8 @@ import { UpdateCategorieDto } from './dto/update-category.dto';
 import { Categorie } from './entities/category.entity';
 
 @ApiTags('Categories')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+/* @UseGuards(JwtAuthGuard)
+@ApiBearerAuth() */
 @Controller('categories')
 export class CategoriesController {
 	constructor(private readonly categoriesService: CategoriesService) {}
@@ -27,20 +27,46 @@ export class CategoriesController {
 	@Post()
 	async create(@Body() createCategorieDto: CreateCategorieDto) {
 		//Teste si la catégorie est déjà présente dans la BD, quelque soit son écriture
-		const dataAll = await (
-			await Categorie.find()
-		).map((data) => data.nom);
-		const test = dataAll
+		const dataAll = await await Categorie.find();
+
+		const listCategoriesbyNom = dataAll.map((data) => data.nom);
+
+		const listSupport = dataAll.map((data) => data.support.id);
+
+		const CheckNom = listCategoriesbyNom
+			.map((data) => data)
 			.toString()
 			.toLowerCase()
 			.includes(createCategorieDto.nom.toLowerCase());
 
-		if (test) {
+		if (!listSupport.includes(createCategorieDto.support)) {
 			return {
 				status: EStatus.FAIL,
-				message: EMessageStatus.x2,
-				data: createCategorieDto.nom,
+				message: EMessageStatus.Unknown,
+				data:
+					'La référence de support ' +
+					createCategorieDto.support +
+					' est inconnue !!',
 			};
+		}
+
+		if (CheckNom) {
+			const checkSupport = dataAll
+				.filter(
+					(data) =>
+						data.nom ===
+						createCategorieDto.nom
+				)
+				.map((data) => data.support.id)
+				.includes(createCategorieDto.support);
+
+			if (checkSupport) {
+				return {
+					status: EStatus.FAIL,
+					message: 'Cette catégorie, avec ce Support, existe déjà !!',
+					data: createCategorieDto,
+				};
+			}
 		}
 		const newData = await this.categoriesService.create(
 			createCategorieDto
@@ -71,6 +97,23 @@ export class CategoriesController {
 	@Get(':id')
 	async findOne(@Param('id', ParseIntPipe) id: number) {
 		const data = await this.categoriesService.findOne(id);
+		if (!data) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unknown,
+			};
+		}
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.dataOK,
+			data: data,
+		};
+	}
+
+	@Get('support/:id')
+	async searchbySupport(@Param('id', ParseIntPipe) id: number) {
+		const data = await this.categoriesService.findbySupport(id);
+
 		if (!data) {
 			return {
 				status: EStatus.FAIL,

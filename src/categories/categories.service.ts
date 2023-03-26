@@ -43,11 +43,28 @@ export class CategoriesService {
 		return undefined;
 	}
 
+	async findbySupport(id: number): Promise<Categorie[] | undefined> {
+		let allData = await Categorie.find();
+		if (!allData[0]) {
+			return undefined;
+		}
+
+		const listbySupport = allData.filter(
+			(data) => data.support.id === id
+		);
+		console.log(listbySupport);
+
+		if (!listbySupport[0]) {
+			return undefined;
+		}
+		return listbySupport;
+	}
+
 	async update(
 		id: number,
 		updateCategoryDto: UpdateCategorieDto
 	): Promise<Categorie | undefined> {
-		await Categorie.update(id, updateCategoryDto);
+		//await Categorie.update(id, updateCategoryDto);
 
 		const dataUpdated = await Categorie.findOneBy({ id });
 		if (dataUpdated) {

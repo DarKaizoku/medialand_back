@@ -42,7 +42,6 @@ export class Media extends BaseEntity {
 
 	@ApiProperty()
 	@ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.id, {
-		eager: true,
 		onUpdate: 'CASCADE',
 		onDelete: 'CASCADE',
 	})
@@ -52,26 +51,23 @@ export class Media extends BaseEntity {
 	@ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.mediatheque)
 	utilisateur: Utilisateur[];
 
-	@ManyToMany(() => Support, (support) => support.id, {
+	@ManyToOne(() => Support, {
 		eager: true,
-		onUpdate: 'CASCADE',
-		onDelete: 'CASCADE',
+		cascade: true,
 	})
 	@JoinTable()
-	support: Support[];
+	support: Support;
 
-	@ManyToMany(() => Categorie, (categorie) => categorie.id, {
+	@ManyToMany(() => Categorie, {
 		eager: true,
-		onUpdate: 'CASCADE',
-		onDelete: 'CASCADE',
+		cascade: true,
 	})
 	@JoinTable()
 	categorie: Categorie[];
 
 	@ManyToMany(() => Auteur, {
 		eager: true,
-		onUpdate: 'CASCADE',
-		onDelete: 'CASCADE',
+		cascade: true,
 	})
 	@JoinTable()
 	auteur: Auteur[];

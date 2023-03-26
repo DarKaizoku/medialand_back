@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { time } from 'console';
+import { Auteur } from 'src/auteurs/entities/auteur.entity';
+import { Categorie } from 'src/categories/entities/category.entity';
 import { TDuree } from 'src/constants/duree.type';
 import { AutoCreate } from 'src/middleware/autoCreateFct';
+import { AutoUpdate } from 'src/middleware/autoUpdateFct';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { Media } from './entities/media.entity';
@@ -9,7 +12,9 @@ import { Media } from './entities/media.entity';
 @Injectable()
 export class MediasService {
 	async create(
-		createMediaDto: CreateMediaDto
+		createMediaDto: CreateMediaDto,
+		auteurs: Auteur[],
+		categories: Categorie[]
 	): Promise<Media | undefined> {
 		let newMedia = new Media();
 
@@ -23,7 +28,7 @@ export class MediasService {
 
 		newMedia = AutoCreate(createMediaDto) as Media;
 
-		const dataSaved = await Media.save(newMedia);
+		await Media.save(newMedia);
 
 		const newdata = await Media.findOneBy({
 			titre: createMediaDto.titre,
@@ -36,7 +41,9 @@ export class MediasService {
 	}
 
 	async findAll(): Promise<Media[] | undefined> {
-		const data = await Media.find();
+		const data = await Media.find({
+			relations: { proprietaire: true },
+		});
 
 		if (data[0]) {
 			return data;
@@ -64,7 +71,11 @@ export class MediasService {
 				(updateMediaDto.duree as TDuree).secondes;
 		}
 
-		await Media.update(id, updateMediaDto as unknown as Media);
+		const datatoUpdate = (await Media.findOneBy({ id })) as Media;
+
+		AutoUpdate(datatoUpdate, updateMediaDto);
+		//await Media.update(id, updateMediaDto as unknown as Media);
+		await Media.save(datatoUpdate);
 
 		const dataUpdated = await Media.findOneBy({ id });
 		if (dataUpdated) {

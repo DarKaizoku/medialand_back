@@ -19,5 +19,5 @@ export class UpdateMediaDto extends PartialType(CreateMediaDto) {
 
 	@ApiProperty()
 	@IsOptional()
-	support: Support[];
+	support: Support;
 }
