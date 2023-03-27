@@ -13,6 +13,9 @@ import { CreateEmpruntDto } from './dto/create-emprunt.dto';
 import { UpdateEmpruntDto } from './dto/update-emprunt.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Utilisateur } from 'src/utilisateurs/entities/utilisateur.entity';
+import { EMessageStatus, EStatus } from 'src/constants/enum';
+import { Media } from 'src/medias/entities/media.entity';
 
 @ApiTags('Emprunts')
 /* @UseGuards(JwtAuthGuard)
@@ -22,22 +25,46 @@ export class EmpruntsController {
 	constructor(private readonly empruntsService: EmpruntsService) {}
 
 	@Post()
-	create(@Body() createEmpruntDto: CreateEmpruntDto) {
+	async create(@Body() createEmpruntDto: CreateEmpruntDto) {
+		const emprunteurCheck = await Utilisateur.findOneBy({
+			id: createEmpruntDto.emprunteur,
+		});
+		if (emprunteurCheck) {
+			return {
+				status: EStatus.FAIL,
+				message:
+					EMessageStatus.Unknown + ' emprunteur ',
+			};
+		}
+		const dataMedia = await Media.findOneBy({
+			id: createEmpruntDto.media,
+		});
+
+		const listProprietaire = dataMedia?.proprietaire!;
+		if (listProprietaire.includes(createEmpruntDto.proprietaire)) {
+			return {
+				status: EStatus.FAIL,
+				message:
+					EMessageStatus.Unknown +
+					' propriétaire ',
+			};
+		}
+
 		return this.empruntsService.create(createEmpruntDto);
 	}
 
 	@Get()
-	findAll() {
+	async findAll() {
 		return this.empruntsService.findAll();
 	}
 
 	@Get(':id')
-	findOne(@Param('id') id: string) {
+	async findOne(@Param('id') id: string) {
 		return this.empruntsService.findOne(+id);
 	}
 
 	@Patch(':id')
-	update(
+	async update(
 		@Param('id') id: string,
 		@Body() updateEmpruntDto: UpdateEmpruntDto
 	) {
@@ -45,7 +72,7 @@ export class EmpruntsController {
 	}
 
 	@Delete(':id')
-	remove(@Param('id') id: string) {
+	async remove(@Param('id') id: string) {
 		return this.empruntsService.remove(+id);
 	}
 }

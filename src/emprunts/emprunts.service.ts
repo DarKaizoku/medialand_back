@@ -6,30 +6,30 @@ import { Emprunt } from './entities/emprunt.entity';
 
 @Injectable()
 export class EmpruntsService {
-  create(createEmpruntDto: CreateEmpruntDto) {
-    let newEmprunt = new Emprunt();
+	create(createEmpruntDto: CreateEmpruntDto) {
+		let newEmprunt = new Emprunt();
 
-    newEmprunt = AutoCreate(createEmpruntDto) as Emprunt;
-    console.log(newEmprunt);
+		newEmprunt = AutoCreate(createEmpruntDto) as Emprunt;
+		console.log(newEmprunt);
 
-    const save = Emprunt.save(newEmprunt);
+		const save = Emprunt.save(newEmprunt);
 
-    return 'This action adds a new emprunt';
-  }
+		return 'This action adds a new emprunt';
+	}
 
-  findAll() {
-    return `This action returns all emprunts`;
-  }
+	async findAll() {
+		return `This action returns all emprunts`;
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} emprunt`;
-  }
+	async findOne(id: number) {
+		return `This action returns a #${id} emprunt`;
+	}
 
-  update(id: number, updateEmpruntDto: UpdateEmpruntDto) {
-    return `This action updates a #${id} emprunt`;
-  }
+	async update(id: number, updateEmpruntDto: UpdateEmpruntDto) {
+		return `This action updates a #${id} emprunt`;
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} emprunt`;
-  }
+	async remove(id: number) {
+		return `This action removes a #${id} emprunt`;
+	}
 }
