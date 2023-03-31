@@ -10,6 +10,7 @@ import {
 import { Support } from 'src/supports/entities/support.entity';
 export class CreateCategorieDto {
 	static minLength: number = 2;
+    
 	@ApiProperty()
 	@MinLength(CreateCategorieDto.minLength)
 	@IsNotEmpty()

@@ -70,7 +70,7 @@ export class UtilisateursController {
 	}
 
 	@ApiBearerAuth()
-	//@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtAuthGuard)
 	@Get()
 	async findAll() {
 		const data = await this.utilisateursService.findAll();

@@ -6,12 +6,10 @@ import {
 	MinLength,
 	Length,
 	IsNumber,
-	IsObject,
+    IsEmpty,
+    IsArray,
 } from 'class-validator';
-import { Auteur } from 'src/auteurs/entities/auteur.entity';
-import { Categorie } from 'src/categories/entities/category.entity';
 import { DureeDto } from 'src/constants/duree.dto';
-import { Support } from 'src/supports/entities/support.entity';
 
 export class CreateMediaDto {
 	static minLength: number = 1;
@@ -45,18 +43,15 @@ export class CreateMediaDto {
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsNumber()
-	proprietaire: number[];
-
-	@ApiProperty()
-	@IsNotEmpty()
-	@IsNumber()
 	support: number;
 
 	@ApiProperty()
 	@IsOptional()
+    @IsArray()
 	categorie: number[];
 
 	@ApiProperty()
 	@IsOptional()
+    @IsArray()
 	auteur: number[];
 }

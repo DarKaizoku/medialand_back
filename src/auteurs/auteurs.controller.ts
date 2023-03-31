@@ -18,8 +18,8 @@ import { UpdateAuteurDto } from './dto/update-auteur.dto';
 import { Auteur } from './entities/auteur.entity';
 
 @ApiTags('Auteurs')
-/* @UseGuards(JwtAuthGuard)
-@ApiBearerAuth() */
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @Controller('auteurs')
 export class AuteursController {
 	constructor(private readonly auteursService: AuteursService) {}

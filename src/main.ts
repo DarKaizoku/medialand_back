@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 
 async function initialize() {
 	const app = await NestFactory.create(AppModule);
-
+	app.enableCors();
 	const config = new DocumentBuilder()
 		.addBearerAuth()
 		.setTitle('MediaLand')

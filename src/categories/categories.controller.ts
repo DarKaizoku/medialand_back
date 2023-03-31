@@ -18,8 +18,8 @@ import { UpdateCategorieDto } from './dto/update-category.dto';
 import { Categorie } from './entities/category.entity';
 
 @ApiTags('Categories')
-/* @UseGuards(JwtAuthGuard)
-@ApiBearerAuth() */
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @Controller('categories')
 export class CategoriesController {
 	constructor(private readonly categoriesService: CategoriesService) {}

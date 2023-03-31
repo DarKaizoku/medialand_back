@@ -1,12 +1,12 @@
 import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Patch,
-	Param,
-	Delete,
-	UseGuards,
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseGuards,
 } from '@nestjs/common';
 import { EmpruntsService } from './emprunts.service';
 import { CreateEmpruntDto } from './dto/create-emprunt.dto';
@@ -22,57 +22,57 @@ import { Media } from 'src/medias/entities/media.entity';
 @ApiBearerAuth() */
 @Controller('emprunts')
 export class EmpruntsController {
-	constructor(private readonly empruntsService: EmpruntsService) {}
+    constructor(private readonly empruntsService: EmpruntsService) { }
 
-	@Post()
-	async create(@Body() createEmpruntDto: CreateEmpruntDto) {
-		const emprunteurCheck = await Utilisateur.findOneBy({
-			id: createEmpruntDto.emprunteur,
-		});
-		if (emprunteurCheck) {
-			return {
-				status: EStatus.FAIL,
-				message:
-					EMessageStatus.Unknown + ' emprunteur ',
-			};
-		}
-		const dataMedia = await Media.findOneBy({
-			id: createEmpruntDto.media,
-		});
+    @Post()
+    async create(@Body() createEmpruntDto: CreateEmpruntDto) {
+        const emprunteurCheck = await Utilisateur.findOneBy({
+            id: createEmpruntDto.emprunteur,
+        });
+        if (emprunteurCheck) {
+            return {
+                status: EStatus.FAIL,
+                message:
+                    EMessageStatus.Unknown + ' emprunteur ',
+            };
+        }
+        const dataMedia = await Media.findOneBy({
+            id: createEmpruntDto.media,
+        });
 
-		const listProprietaire = dataMedia?.proprietaire!;
-		if (listProprietaire.includes(createEmpruntDto.proprietaire)) {
-			return {
-				status: EStatus.FAIL,
-				message:
-					EMessageStatus.Unknown +
-					' propriétaire ',
-			};
-		}
+        /* const listProprietaire = dataMedia?.proprietaire!;
+        if (listProprietaire.includes(createEmpruntDto.proprietaire)) {
+            return {
+                status: EStatus.FAIL,
+                message:
+                    EMessageStatus.Unknown +
+                    ' propriétaire ',
+            };
+        } */
 
-		return this.empruntsService.create(createEmpruntDto);
-	}
+        return this.empruntsService.create(createEmpruntDto);
+    }
 
-	@Get()
-	async findAll() {
-		return this.empruntsService.findAll();
-	}
+    @Get()
+    async findAll() {
+        return this.empruntsService.findAll();
+    }
 
-	@Get(':id')
-	async findOne(@Param('id') id: string) {
-		return this.empruntsService.findOne(+id);
-	}
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        return this.empruntsService.findOne(+id);
+    }
 
-	@Patch(':id')
-	async update(
-		@Param('id') id: string,
-		@Body() updateEmpruntDto: UpdateEmpruntDto
-	) {
-		return this.empruntsService.update(+id, updateEmpruntDto);
-	}
+    @Patch(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateEmpruntDto: UpdateEmpruntDto
+    ) {
+        return this.empruntsService.update(+id, updateEmpruntDto);
+    }
 
-	@Delete(':id')
-	async remove(@Param('id') id: string) {
-		return this.empruntsService.remove(+id);
-	}
+    @Delete(':id')
+    async remove(@Param('id') id: string) {
+        return this.empruntsService.remove(+id);
+    }
 }
