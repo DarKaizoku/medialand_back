@@ -12,7 +12,9 @@ export class AuteursService {
 
 		newData.nom = createAuteurDto.nom;
 
-		await Auteur.save(newData);
+
+		const test = await Auteur.save(newData);
+		console.log(test);
 
 		const data = await Auteur.findOneBy({ nom: newData.nom });
 

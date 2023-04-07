@@ -57,15 +57,17 @@ export class Media extends BaseEntity {
 
     @ManyToMany(() => Categorie, {
         eager: true,
-        cascade: true
+        cascade: true,
+        nullable: true
     })
     @JoinTable()
-    categorie: Categorie[];
+    categorie: Categorie[] | null;
 
     @ManyToMany(() => Auteur, {
         eager: true,
-        cascade: true
+        cascade: true,
+        nullable: true
     })
     @JoinTable()
-    auteur: Auteur[];
+    auteur: Auteur[] | null;
 }
