@@ -48,10 +48,8 @@ export class UtilisateursService {
         console.log('keys', listKeys);
         console.log('values', listValue);
 
-        if (data[0]) {
-            return data;
-        }
-        return undefined;
+        return data;
+
     }
 
     async findOnebyUsername(

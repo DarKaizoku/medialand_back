@@ -22,7 +22,7 @@ import { Auteur } from './entities/auteur.entity';
 @ApiBearerAuth()
 @Controller('auteurs')
 export class AuteursController {
-	constructor(private readonly auteursService: AuteursService) {}
+	constructor(private readonly auteursService: AuteursService) { }
 
 	@Post()
 	async create(@Body() createAuteurDto: CreateAuteurDto) {
@@ -55,12 +55,6 @@ export class AuteursController {
 	@Get()
 	async findAll() {
 		const data = await this.auteursService.findAll();
-		if (!data) {
-			return {
-				status: EStatus.FAIL,
-				message: EMessageStatus.NoData,
-			};
-		}
 		return {
 			status: EStatus.OK,
 			message: EMessageStatus.dataOK,

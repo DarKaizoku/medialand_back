@@ -95,13 +95,7 @@ export class MediasController {
 
     @Get()
     async findAll() {
-        const data = await this.mediasService.findAll();
-        if (!data) {
-            return {
-                status: EStatus.FAIL,
-                message: EMessageStatus.NoData,
-            };
-        }
+        const data = await this.mediasService.findAll()
         return {
             status: EStatus.OK,
             message: EMessageStatus.dataOK,
@@ -115,12 +109,6 @@ export class MediasController {
 
         const listData = await this.mediasService.findAllbyUser(userId)
 
-        if (!listData) {
-            return {
-                status: EStatus.FAIL,
-                message: EMessageStatus.Unknown,
-            };
-        }
         return {
             status: EStatus.OK,
             message: EMessageStatus.dataOK,
@@ -159,13 +147,6 @@ export class MediasController {
             };
         }
         if (updateMediaDto.titre) {
-            const listTitre = dataAll.map((data) => data.titre);
-
-            const checkTitre = listTitre
-                .toString()
-                .toLowerCase()
-                .includes(updateMediaDto.titre.toLowerCase());
-
             //Vérification du No de Support et nom de Media sur même Support : Non Accepté
             if (updateMediaDto.support) {
                 const supportExist = await Support.findOneBy({
@@ -180,12 +161,18 @@ export class MediasController {
                             updateMediaDto.support,
                     };
                 }
-                const checkSupport = dataAll.filter(
+                const listTitre = dataAll.filter(
                     (data) =>
                         data.support.id ===
                         updateMediaDto.support
-                );
-                if (checkSupport) {
+                ).map(data => data.titre);
+
+                const checkTitre = listTitre
+                    .toString()
+                    .toLowerCase()
+                    .includes(updateMediaDto.titre.toLowerCase());
+
+                if (checkTitre) {
                     return {
                         status: EStatus.FAIL,
                         message: `Ce Média (${updateMediaDto.titre}) sur ce Support (${updateMediaDto.support}) existe déjà !!`,

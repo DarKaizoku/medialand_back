@@ -28,10 +28,8 @@ export class CategoriesService {
 	async findAll(): Promise<Categorie[] | undefined> {
 		const data = await Categorie.find();
 
-		if (data[0]) {
-			return data;
-		}
-		return undefined;
+		return data;
+
 	}
 
 	async findOne(id: number): Promise<Categorie | undefined> {

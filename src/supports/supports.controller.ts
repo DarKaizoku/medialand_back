@@ -22,7 +22,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @ApiBearerAuth()
 @Controller('supports')
 export class SupportsController {
-	constructor(private readonly supportsService: SupportsService) {}
+	constructor(private readonly supportsService: SupportsService) { }
 
 	@Post()
 	async create(@Body() createSupportDto: CreateSupportDto) {
@@ -54,12 +54,7 @@ export class SupportsController {
 	@Get()
 	async findAll() {
 		const data = await this.supportsService.findAll();
-		if (!data) {
-			return {
-				status: EStatus.FAIL,
-				message: EMessageStatus.NoData,
-			};
-		}
+
 		return {
 			status: EStatus.OK,
 			message: EMessageStatus.dataOK,

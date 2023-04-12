@@ -28,10 +28,8 @@ export class SupportsService {
 	async findAll(): Promise<Support[] | undefined> {
 		const data = await Support.find();
 
-		if (data[0]) {
-			return data;
-		}
-		return undefined;
+		return data;
+
 	}
 
 	async findOne(id: number): Promise<Support | undefined> {

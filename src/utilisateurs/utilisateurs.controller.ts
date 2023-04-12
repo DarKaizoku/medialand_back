@@ -26,7 +26,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class UtilisateursController {
 	constructor(
 		private readonly utilisateursService: UtilisateursService
-	) {}
+	) { }
 
 	@Post('register')
 	async create(@Body() createUtilisateurDto: CreateUtilisateurDto) {
@@ -75,12 +75,6 @@ export class UtilisateursController {
 	async findAll() {
 		const data = await this.utilisateursService.findAll();
 
-		if (!data) {
-			return {
-				status: EStatus.OK,
-				message: EMessageStatus.NoData,
-			};
-		}
 		return {
 			status: EStatus.OK,
 			message: EMessageStatus.dataOK,

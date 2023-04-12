@@ -49,18 +49,13 @@ export class MediasService {
             relations: { proprietaire: true },
         });
 
-        if (data[0]) {
-            return data;
-        }
-        return undefined;
+        return data;
+
     }
 
     async findAllbyUser(userId: number): Promise<Media[] | undefined> {
         const data = await Media.find({ relations: { proprietaire: true }, where: { proprietaire: { id: userId } } })
 
-        if (!data[0]) {
-            return undefined
-        }
         return data
 
     }

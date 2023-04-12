@@ -22,7 +22,7 @@ import { Categorie } from './entities/category.entity';
 @ApiBearerAuth()
 @Controller('categories')
 export class CategoriesController {
-	constructor(private readonly categoriesService: CategoriesService) {}
+	constructor(private readonly categoriesService: CategoriesService) { }
 
 	@Post()
 	async create(@Body() createCategorieDto: CreateCategorieDto) {
@@ -81,12 +81,7 @@ export class CategoriesController {
 	@Get()
 	async findAll() {
 		const data = await this.categoriesService.findAll();
-		if (!data) {
-			return {
-				status: EStatus.FAIL,
-				message: EMessageStatus.NoData,
-			};
-		}
+
 		return {
 			status: EStatus.OK,
 			message: EMessageStatus.dataOK,
