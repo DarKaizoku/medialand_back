@@ -33,7 +33,7 @@ export class UtilisateursService {
         return undefined;
     }
 
-    async findAll(): Promise<Utilisateur[] | undefined> {
+    async findAll(): Promise<Utilisateur[]> {
         const data = await Utilisateur.find({ relations: { mediatheque: true } });
 
         //lignes de test opur contruction autocreate
@@ -50,6 +50,15 @@ export class UtilisateursService {
 
         return data;
 
+    }
+
+    async findbyId(id: number): Promise<Utilisateur | undefined> {
+        const data = await Utilisateur.findOneBy({ id })
+
+        if (!data) {
+            return undefined;
+        }
+        return data;
     }
 
     async findOnebyUsername(

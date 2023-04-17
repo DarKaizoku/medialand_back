@@ -41,6 +41,10 @@ export class Media extends BaseEntity {
     format: number;
 
     @ApiProperty()
+    @Column({ type: 'varchar', nullable: true })
+    emplacement: string;
+
+    @ApiProperty()
     @ManyToMany(() => Utilisateur, (utilisateur) => utilisateur.mediatheque, {
         eager: true,
         cascade: true,

@@ -25,7 +25,7 @@ export class CategoriesService {
 		return undefined;
 	}
 
-	async findAll(): Promise<Categorie[] | undefined> {
+	async findAll(): Promise<Categorie[]> {
 		const data = await Categorie.find();
 
 		return data;

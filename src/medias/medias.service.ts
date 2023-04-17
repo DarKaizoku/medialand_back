@@ -44,7 +44,7 @@ export class MediasService {
         return undefined;
     }
 
-    async findAll(): Promise<Media[] | undefined> {
+    async findAll(): Promise<Media[]> {
         const data = await Media.find({
             relations: { proprietaire: true },
         });

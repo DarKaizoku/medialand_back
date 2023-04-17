@@ -25,7 +25,7 @@ export class SupportsService {
 		return undefined;
 	}
 
-	async findAll(): Promise<Support[] | undefined> {
+	async findAll(): Promise<Support[]> {
 		const data = await Support.find();
 
 		return data;

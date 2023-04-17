@@ -10,6 +10,7 @@ import {
 	UseInterceptors,
 	UseGuards,
 	Request,
+	ParseIntPipe,
 } from '@nestjs/common';
 import { UtilisateursService } from './utilisateurs.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
@@ -84,16 +85,19 @@ export class UtilisateursController {
 
 	@ApiBearerAuth()
 	@UseGuards(JwtAuthGuard)
-	@Get('byUsername')
-	findOneUsername(@Body() username: string) {
+	@Get('moncompte')
+	async findById(@Request() req: any) {
+		const id = req.user.user_id
+
 		const data =
-			this.utilisateursService.findOnebyUsername(username);
+			await this.utilisateursService.findbyId(id);
 		if (!data) {
 			return {
 				status: EStatus.OK,
 				message: EMessageStatus.NoData,
 			};
 		}
+
 		return {
 			status: EStatus.OK,
 			message: EMessageStatus.dataOK,
@@ -108,6 +112,7 @@ export class UtilisateursController {
 		@Body() updateUtilisateurDto: UpdateUtilisateurDto,
 		@Request() req: any
 	) {
+		const ID = req.user.user_id
 		//Vérification de l'existant du nouveau pseudo saisi
 
 		if (updateUtilisateurDto.username) {
@@ -116,11 +121,14 @@ export class UtilisateursController {
 					updateUtilisateurDto.username
 				);
 			if (checkUsername) {
-				return {
-					status: EStatus.FAIL,
-					message: EMessageStatus.x2,
-					data: updateUtilisateurDto.username,
-				};
+				if (checkUsername.id !== ID) {
+					return {
+						status: EStatus.FAIL,
+						message: EMessageStatus.x2,
+						data: updateUtilisateurDto.username,
+					};
+				}
+
 			}
 		}
 
@@ -131,24 +139,27 @@ export class UtilisateursController {
 				email: updateUtilisateurDto.email,
 			});
 			if (checkEmail) {
-				return {
-					status: EStatus.FAIL,
-					message: EMessageStatus.x2,
-					data: updateUtilisateurDto.email,
-				};
+				if (checkEmail.id !== ID) {
+					return {
+						status: EStatus.FAIL,
+						message: EMessageStatus.x2,
+						data: updateUtilisateurDto.email,
+					};
+				}
+
 			}
 		}
+		//hashage du nouveau password pour Version+
 
-		//hashage du nouveau password
-
-		if (updateUtilisateurDto.password) {
+		/* if (updateUtilisateurDto.password) {
 			updateUtilisateurDto.password = await bcrypt.hash(
 				updateUtilisateurDto.password,
 				10
 			);
-		}
+		} */
+
 		const dataUpdated = await this.utilisateursService.update(
-			req.user.user_id,
+			ID,
 			updateUtilisateurDto
 		);
 

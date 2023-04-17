@@ -24,7 +24,7 @@ export class AuteursService {
 		return data;
 	}
 
-	async findAll(): Promise<Auteur[] | undefined> {
+	async findAll(): Promise<Auteur[]> {
 		const data = await Auteur.find();
 
 		return data;
