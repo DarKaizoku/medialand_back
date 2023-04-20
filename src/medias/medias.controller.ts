@@ -137,7 +137,7 @@ export class MediasController {
         @Param('id', ParseIntPipe) id: number,
         @Body() updateMediaDto: UpdateMediaDto
     ) {
-        //Multi reqeuet ou une requete puis tri en JS ??? !!!! ici multi requete
+        //Multi requete ou une requete puis tri en JS ??? !!!! ici multi requete
         const dataAll = await Media.find();
         const dataCheck = dataAll.map((data) => data.id).includes(id);
         if (!dataCheck) {

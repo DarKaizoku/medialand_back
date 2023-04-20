@@ -36,8 +36,8 @@ export class UtilisateursService {
     async findAll(): Promise<Utilisateur[]> {
         const data = await Utilisateur.find({ relations: { mediatheque: true } });
 
-        //lignes de test opur contruction autocreate
-        const list = Object.entries(data[0]);
+        //lignes de test pour contruction autocreate
+        /* const list = Object.entries(data[0]);
         const list2 = Object.fromEntries(list);
         const listKeys = Object.keys(data[0]);
         const listValue = Object.values(data[0]);
@@ -46,7 +46,7 @@ export class UtilisateursService {
         console.log('entries', list);
         console.log('fromentries', list2);
         console.log('keys', listKeys);
-        console.log('values', listValue);
+        console.log('values', listValue); */
 
         return data;
 
@@ -84,6 +84,12 @@ export class UtilisateursService {
             return undefined;
         }
         return dataUpdated;
+    }
+
+    async updateStatus(id: number, newStatus: boolean) {
+        const data = await Utilisateur.update(id, { admin: newStatus })!
+
+        return data
     }
 
     async remove(id: number): Promise<Utilisateur | undefined> {

@@ -33,4 +33,6 @@ export enum EMessageStatus {
 	DeletedOK = 'La donnée a bien été supprimée !!',
 
 	forbidden = `L'utilisateur n'a pas l'authorisation d'accès !!`,
+
+	Unauthorized = `!! Zone réservée à l'administrateur !!`
 }

@@ -6,18 +6,18 @@ import {
 	MinLength,
 	Length,
 	IsNumber,
-    IsEmpty,
-    IsArray,
+	IsArray,
 } from 'class-validator';
+
 import { DureeDto } from 'src/constants/duree.dto';
 
 export class CreateMediaDto {
 	static minLength: number = 1;
 
 	@ApiProperty()
+	@IsString()
 	@MinLength(CreateMediaDto.minLength)
 	@IsNotEmpty()
-	@IsString()
 	titre: string;
 
 	@ApiProperty()
@@ -47,11 +47,11 @@ export class CreateMediaDto {
 
 	@ApiProperty()
 	@IsOptional()
-    @IsArray()
+	@IsArray()
 	categorie: number[];
 
 	@ApiProperty()
 	@IsOptional()
-    @IsArray()
+	@IsArray()
 	auteur: number[];
 }

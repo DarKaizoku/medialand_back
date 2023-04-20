@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional } from 'class-validator';
 import { CreateUtilisateurDto } from './create-utilisateur.dto';
 
 export class UpdateUtilisateurDto extends PartialType(CreateUtilisateurDto) {

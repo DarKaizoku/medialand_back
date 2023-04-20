@@ -20,6 +20,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { EMessageStatus, EStatus } from 'src/constants/enum';
 import { Utilisateur } from './entities/utilisateur.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UpdateUserStatus } from './dto/update-userStatus.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Utilisateurs')
@@ -72,8 +73,16 @@ export class UtilisateursController {
 
 	@ApiBearerAuth()
 	@UseGuards(JwtAuthGuard)
-	@Get()
-	async findAll() {
+	@Get('users')
+	async findAll(@Request() req: any) {
+		const status = req.user.userStatus
+
+		if (!status) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unauthorized
+			}
+		}
 		const data = await this.utilisateursService.findAll();
 
 		return {
@@ -178,11 +187,64 @@ export class UtilisateursController {
 
 	@ApiBearerAuth()
 	@UseGuards(JwtAuthGuard)
+	@Patch('updateStatus') // ici en booleanish mais le choix de l'integer pour plus de status est meilleur !!
+	async updateUserStatus(@Body() updateUserStatus: UpdateUserStatus,
+		@Request() req: any) {
+		const status = req.user.userStatus
+
+		if (!status) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unauthorized
+			}
+		}
+
+		await this.utilisateursService.updateStatus(updateUserStatus.id, updateUserStatus.admin)
+
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.updateOK,
+		}
+	}
+
+	@ApiBearerAuth()
+	@UseGuards(JwtAuthGuard)
 	@Delete('eraser')
 	async remove(@Request() req: any) {
 		const id = req.user.user_id;
 
-		const data = await Utilisateur.remove(id);
+		const data = await this.utilisateursService.remove(id);
+
+		if (!data) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unknown,
+			};
+		}
+
+		return {
+			status: EStatus.OK,
+			message: EMessageStatus.DeletedOK,
+			save: data,
+		};
+	}
+
+	@ApiBearerAuth()
+	@UseGuards(JwtAuthGuard)
+	@Delete('TheEraser/:id')
+	async adminRemove(@Param('id', ParseIntPipe) id: number, @Request() req: any) { // ici id est any et non number pour utilisation dans le remove qui attend un any !!
+
+		const status = req.user.userStatus
+
+		if (!status) {
+			return {
+				status: EStatus.FAIL,
+				message: EMessageStatus.Unauthorized
+			}
+		}
+
+		const data = await this.utilisateursService.remove(id);
+
 		if (!data) {
 			return {
 				status: EStatus.FAIL,
