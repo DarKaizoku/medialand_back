@@ -160,12 +160,12 @@ export class UtilisateursController {
 		}
 		//hashage du nouveau password pour Version+
 
-		/* if (updateUtilisateurDto.password) {
+		if (updateUtilisateurDto.password) {
 			updateUtilisateurDto.password = await bcrypt.hash(
 				updateUtilisateurDto.password,
 				10
 			);
-		} */
+		}
 
 		const dataUpdated = await this.utilisateursService.update(
 			ID,
@@ -231,9 +231,8 @@ export class UtilisateursController {
 
 	@ApiBearerAuth()
 	@UseGuards(JwtAuthGuard)
-	@Delete('TheEraser/:id')
-	async adminRemove(@Param('id', ParseIntPipe) id: number, @Request() req: any) { // ici id est any et non number pour utilisation dans le remove qui attend un any !!
-
+	@Delete(':id')
+	async adminRemove(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
 		const status = req.user.userStatus
 
 		if (!status) {

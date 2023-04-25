@@ -26,7 +26,9 @@ export class MediasService {
                 (createMediaDto.duree as TDuree).secondes;
         }
 
-        let newMedia = AutoCreate(createMediaDto) as Media;
+        let newMedia = AutoCreate(createMediaDto) as Media; // tester VS spread Operator avec referent !!
+        /* let newMedia = new Media()
+        newMedia = {...createMediaDto} */
         newMedia.proprietaire = [user]
 
         newMedia.categorie = categories;

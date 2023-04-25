@@ -41,7 +41,12 @@ export class MediasController {
 
         const allData = await Media.find();
 
-        const listTitre = allData.map((data) => data.titre);
+        const listTitre = allData.filter(
+            (data) =>
+                data.support.id ===
+                createMediaDto.support
+        ).map((data) => data.titre);
+        console.log(listTitre);
 
         const checkTitre = listTitre
             .toString()
@@ -49,18 +54,16 @@ export class MediasController {
             .includes(createMediaDto.titre.toLowerCase());
 
         if (checkTitre) {
-            const checkSupport = allData.filter(
-                (data) =>
-                    data.support.id ===
-                    createMediaDto.support
-            );
-            if (checkSupport) {
-                return {
-                    status: EStatus.FAIL,
-                    message: 'Ce média existe déjà !!',
-                    data: createMediaDto,
-                };
-            }
+            //const checkSupport = allData.;
+
+
+            //if (checkSupport[0]) {
+            return {
+                status: EStatus.FAIL,
+                message: 'Ce média existe déjà !!',
+                data: createMediaDto,
+            };
+            //}
         }
         // extraction des données Auteurs via leurs Ids
         if (createMediaDto.auteur) {
