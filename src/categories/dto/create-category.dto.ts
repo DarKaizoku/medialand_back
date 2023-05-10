@@ -1,20 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
 	IsString,
 	IsNotEmpty,
 	MinLength,
-	IsLowercase,
 	IsNumber,
 } from 'class-validator';
-import { Support } from 'src/supports/entities/support.entity';
 export class CreateCategorieDto {
 	static minLength: number = 2;
-    
-	@ApiProperty()
-	@MinLength(CreateCategorieDto.minLength)
-	@IsNotEmpty()
-	@IsString()
+
+	@ApiProperty() // intégration de lapropriété à Zwagger
+	@MinLength(CreateCategorieDto.minLength) // controle de la longueur de la chaine de caractère, ici minimum 2 caractères
+	@IsNotEmpty() // controle de l'obligation de la présence d'un donnée
+	@IsString() // controle du type de donnée, ici chaine de caractère
 	nom: string;
 
 	@ApiProperty()

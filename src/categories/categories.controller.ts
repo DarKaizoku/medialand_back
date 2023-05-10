@@ -16,6 +16,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategorieDto } from './dto/create-category.dto';
 import { UpdateCategorieDto } from './dto/update-category.dto';
 import { Categorie } from './entities/category.entity';
+import { Support } from 'src/supports/entities/support.entity';
 
 @ApiTags('Categories')
 @UseGuards(JwtAuthGuard)
@@ -27,11 +28,13 @@ export class CategoriesController {
 	@Post()
 	async create(@Body() createCategorieDto: CreateCategorieDto) {
 		//Teste si la catégorie est déjà présente dans la BD, quelque soit son écriture
-		const dataAll = await await Categorie.find();
+		const dataAll = await Categorie.find();
 
 		const listCategoriesbyNom = dataAll.map((data) => data.nom);
 
-		const listSupport = dataAll.map((data) => data.support.id);
+		const listSupport = (await Support.find()).map(data => data.id)
+		console.log(listSupport);
+
 
 		const CheckNom = listCategoriesbyNom
 			.map((data) => data)

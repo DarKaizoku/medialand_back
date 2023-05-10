@@ -30,9 +30,15 @@ export class MediasService {
         /* let newMedia = new Media()
         newMedia = {...createMediaDto} */
         newMedia.proprietaire = [user]
+        console.log('catserv', categories);
 
-        newMedia.categorie = categories;
-        newMedia.auteur = auteurs;
+        if (categories[0]) { newMedia.categorie = categories }
+        else { newMedia.categorie = [] }
+        if (auteurs[0]) {
+            newMedia.auteur = auteurs
+        }
+        else { newMedia.auteur = [] }
+        console.log(newMedia);
 
         await Media.save(newMedia);
 
