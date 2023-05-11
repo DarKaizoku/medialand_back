@@ -39,7 +39,7 @@ export class MediasController {
         let listAuteurs = [new Auteur()];
         let listCategories = [new Categorie()];
 
-        const allData = await Media.find();
+        const allData = await this.mediasService.findAll();
 
         const listTitre = allData.filter(
             (data) =>
@@ -47,10 +47,12 @@ export class MediasController {
                     createMediaDto.support) && (data.proprietaire[0]?.id === req.user.user_id)
         ).map((data) => data.titre);
 
-        const checkTitre = listTitre
+        /* const checkTitre = listTitre
             .toString()
             .toLowerCase()
-            .includes(createMediaDto.titre.toLowerCase());
+            .includes(createMediaDto.titre.toLowerCase()); */
+
+        const checkTitre = listTitre.filter(data => data.toLowerCase() === createMediaDto.titre.toLowerCase())
 
         if (checkTitre) {
             return {
@@ -75,7 +77,6 @@ export class MediasController {
             listCategories = await Categorie.find({
                 where: { id: In(createMediaDto.categorie) },
             });
-            console.log('list', listCategories);
 
         }
 
