@@ -35,22 +35,14 @@ export class MediasController {
 
     @Post()
     async create(@Body() createMediaDto: CreateMediaDto, @Request() req: any) {
-
+        const userId = req.user.user_id
         let listAuteurs = [new Auteur()];
         let listCategories = [new Categorie()];
 
-        const allData = await this.mediasService.findAll();
+        const listData = await this.mediasService.findAllbyUser(userId)
 
-        const listTitre = allData.filter(
-            (data) =>
-                (data.support.id ===
-                    createMediaDto.support) && (data.proprietaire[0]?.id === req.user.user_id)
-        ).map((data) => data.titre);
-
-        /* const checkTitre = listTitre
-            .toString()
-            .toLowerCase()
-            .includes(createMediaDto.titre.toLowerCase()); */
+        const listTitre = listData.filter((data) =>
+            (data.support.id === createMediaDto.support)).map((data) => data.titre);
 
         const checkTitre = listTitre.filter(data => data.toLowerCase() === createMediaDto.titre.toLowerCase())
 
@@ -77,7 +69,6 @@ export class MediasController {
             listCategories = await Categorie.find({
                 where: { id: In(createMediaDto.categorie) },
             });
-
         }
 
         const newData = await this.mediasService.create(
