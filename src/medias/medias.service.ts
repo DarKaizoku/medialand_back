@@ -65,7 +65,6 @@ export class MediasService {
         const data = await Media.find({ relations: { proprietaire: true }, where: { proprietaire: { id: userId } } })
 
         return data
-
     }
 
     async findOne(id: number): Promise<Media | undefined> {

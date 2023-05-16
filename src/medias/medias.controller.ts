@@ -46,7 +46,7 @@ export class MediasController {
 
         const checkTitre = listTitre.filter(data => data.toLowerCase() === createMediaDto.titre.toLowerCase())
 
-        if (checkTitre) {
+        if (checkTitre[0]) {
             return {
                 status: EStatus.FAIL,
                 message: 'Ce média existe déjà !!',
