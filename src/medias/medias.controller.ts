@@ -85,7 +85,14 @@ export class MediasController {
     }
 
     @Get()
-    async findAll() {
+    async findAll(@Request() req: any) {
+        const admin = req.user.userStatus
+        if (!admin) {
+            return {
+                status: EStatus.FAIL,
+                message: EMessageStatus.Unauthorized,
+            }
+        }
         const data = await this.mediasService.findAll()
         return {
             status: EStatus.OK,

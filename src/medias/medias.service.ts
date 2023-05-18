@@ -29,8 +29,8 @@ export class MediasService {
         let newMedia = AutoCreate(createMediaDto) as Media; // tester VS spread Operator avec referent !!
         /* let newMedia = new Media()
         newMedia = {...createMediaDto} */
+
         newMedia.proprietaire = [user]
-        console.log('catserv', categories);
 
         if (categories[0]) { newMedia.categorie = categories }
         else { newMedia.categorie = [] }
@@ -38,7 +38,6 @@ export class MediasService {
             newMedia.auteur = auteurs
         }
         else { newMedia.auteur = [] }
-        console.log(newMedia);
 
         await Media.save(newMedia);
 
@@ -115,7 +114,6 @@ export class MediasService {
         await Media.save(datatoUpdate);
 
         const dataUpdated = await Media.findOneBy({ id });
-        console.log(dataUpdated);
 
         if (dataUpdated) {
             return dataUpdated;

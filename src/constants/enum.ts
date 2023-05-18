@@ -6,7 +6,7 @@ export enum EStatus {
 	ERROR = 'ERROR',
 }
 
-//message personnalisé pour les reponses de requete
+//message personnalisé pour les reponses de requetes
 export enum EMessageStatus {
 	m500 = 'There was an error on the server and the request could not be completed ',
 
