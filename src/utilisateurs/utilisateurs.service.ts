@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AutoCreate } from 'src/middleware/autoCreateFct';
+import { AutoCreate } from 'src/functions/autoCreateFct';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 import { Utilisateur } from './entities/utilisateur.entity';

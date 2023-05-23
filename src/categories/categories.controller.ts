@@ -33,7 +33,6 @@ export class CategoriesController {
 		const listCategoriesbyNom = dataAll.map((data) => data.nom);
 
 		const listSupport = (await Support.find()).map(data => data.id)
-		console.log(listSupport);
 
 
 		const CheckNom = listCategoriesbyNom

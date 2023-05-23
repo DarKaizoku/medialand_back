@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AutoCreate } from 'src/middleware/autoCreateFct';
+import { AutoCreate } from 'src/functions/autoCreateFct';
 import { CreateCategorieDto } from './dto/create-category.dto';
 import { UpdateCategorieDto } from './dto/update-category.dto';
 import { Categorie } from './entities/category.entity';
@@ -50,7 +50,6 @@ export class CategoriesService {
 		const listbySupport = allData.filter(
 			(data) => data.support.id === id
 		);
-		console.log(listbySupport);
 
 		if (!listbySupport[0]) {
 			return undefined;

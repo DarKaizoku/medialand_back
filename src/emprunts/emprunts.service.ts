@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AutoCreate } from 'src/middleware/autoCreateFct';
+import { AutoCreate } from 'src/functions/autoCreateFct';
 import { CreateEmpruntDto } from './dto/create-emprunt.dto';
 import { UpdateEmpruntDto } from './dto/update-emprunt.dto';
 import { Emprunt } from './entities/emprunt.entity';
@@ -10,7 +10,6 @@ export class EmpruntsService {
 		let newEmprunt = new Emprunt();
 
 		newEmprunt = AutoCreate(createEmpruntDto) as Emprunt;
-		console.log(newEmprunt);
 
 		const save = Emprunt.save(newEmprunt);
 

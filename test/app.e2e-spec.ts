@@ -46,4 +46,9 @@ describe('AppController (e2e)', () => {
 		expect(response.body).toHaveProperty('data.nom', 'PS5')
 
 	});
+
+	afterEach(async () => {
+		app.close()
+	})
+
 });

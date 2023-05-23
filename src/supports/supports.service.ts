@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AutoCreate } from 'src/middleware/autoCreateFct';
+import { AutoCreate } from 'src/functions/autoCreateFct';
 import { CreateSupportDto } from './dto/create-support.dto';
 import { UpdateSupportDto } from './dto/update-support.dto';
 import { Support } from './entities/support.entity';
