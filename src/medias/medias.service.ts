@@ -9,6 +9,7 @@ import { In } from 'typeorm';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { Media } from './entities/media.entity';
+import { merge } from 'lodash';
 
 @Injectable()
 export class MediasService {
@@ -26,10 +27,10 @@ export class MediasService {
                 (createMediaDto.duree as TDuree).secondes;
         }
 
-        let newMedia = AutoCreate(createMediaDto) as Media; // tester VS spread Operator avec referent !!
+        let newMedia = AutoCreate(createMediaDto) as Media;
         /* let newMedia = new Media()
-        newMedia = {...createMediaDto} */
-
+        newMedia = {...createMediaDto} as Media */
+        //let newMedia = merge(createMediaDto) as Media;
         newMedia.proprietaire = [user]
 
         if (categories[0]) { newMedia.categorie = categories }
